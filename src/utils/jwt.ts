@@ -22,8 +22,12 @@ export function signJwt(object: Object, options?: Jwt.SignOptions | undefined) {
 export function verifyJwt<T>(token: string): T | null {
   try {
     const decoded = Jwt.verify(token, publicKey) as T;
+    console.log(decoded);
+
     return decoded;
   } catch (error) {
+    console.log(error);
+
     return null;
   }
 }

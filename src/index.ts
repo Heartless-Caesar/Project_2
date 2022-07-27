@@ -10,6 +10,9 @@ import {
   ApolloServerPluginLandingPageProductionDefault,
 } from "apollo-server-core";
 import { connectToMongo } from "./utils/mongo";
+import { verifyJwt } from "./utils/jwt";
+import { User } from "./schemas/user.schema";
+import context from "./types/context";
 
 dotenv.config();
 
@@ -25,8 +28,13 @@ const booststrap = async () => {
   //Create Apollo server
   const server = new ApolloServer({
     schema,
-    context: (ctx) => {
-      return ctx;
+    context: (ctx: context) => {
+      const context = ctx;
+      if (ctx.req.cookies.accessToken) {
+        const user = verifyJwt<User>(ctx.req.cookies.accessToken);
+        context.user = user;
+      }
+      return context;
     },
     plugins: [
       process.env.NODE_ENV === "production"

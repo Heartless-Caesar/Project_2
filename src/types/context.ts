@@ -4,7 +4,7 @@ import { User } from "../schemas/user.schema";
 interface context {
   req: Request;
   res: Response;
-  user: User;
+  user: User | null;
 }
 
 export default context;

@@ -16,15 +16,11 @@ export default class UserResolver {
 
   @Mutation(() => String)
   login(@Arg("input") input: LoginInput, @Ctx() context: context) {
-    return this.userService.login(input);
+    return this.userService.login(input, context);
   }
 
   @Query(() => User)
-  me() {
-    return {
-      _id: 123,
-      name: "John Does",
-      email: "johndoe@email.com",
-    };
+  me(@Ctx() context: context) {
+    return context.user;
   }
 }

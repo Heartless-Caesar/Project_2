@@ -1,17 +1,16 @@
 import {
   getModelForClass,
-  Index,
+  index,
   pre,
   prop,
   queryMethod,
-  QueryMethod,
 } from "@typegoose/typegoose";
 import { IsEmail, MaxLength, MinLength } from "class-validator";
 import { Field, InputType, ObjectType } from "type-graphql";
 import bcrypt from "bcrypt";
 import { AsQueryMethod, ReturnModelType } from "@typegoose/typegoose/lib/types";
 
-function findUserByEmail(
+function findByEmail(
   this: ReturnModelType<typeof User, QueryHelpers>,
   email: User["email"]
 ) {
@@ -19,7 +18,7 @@ function findUserByEmail(
 }
 
 interface QueryHelpers {
-  findByEmail: AsQueryMethod<typeof findUserByEmail>;
+  findByEmail: AsQueryMethod<typeof findByEmail>;
 }
 
 //User schema
@@ -36,9 +35,9 @@ interface QueryHelpers {
 
   this.password = hashedPassword;
 })
+@index({ email: 1 })
+@queryMethod(findByEmail)
 @ObjectType()
-@Index({ email: 1 })
-@queryMethod(findUserByEmail)
 export class User {
   @Field(() => String)
   _id: string;
